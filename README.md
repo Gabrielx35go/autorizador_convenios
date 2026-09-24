@@ -2,10 +2,8 @@
 
 ## Scripts disponíveis
 
-- INAS.js
-- ASSEFAZ.js
-- GEAP.js
-- CASSI.js
+- autorizador_inas.js
+- executor_inas.js
 
 ## Utilização
 
