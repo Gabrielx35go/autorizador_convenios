@@ -1,11 +1,4 @@
-(async()=>{const entrada=prompt('Cole os códigos:');
-if(!entrada){alert('Nenhum código informado.');return;}
-const listaCodigos=entrada.split(/[\s,;\n]+/).map(c=>c.trim()).filter(Boolean);
-const mapaQuantidades={};
-for(const codigo of listaCodigos){mapaQuantidades[codigo]=(mapaQuantidades[codigo]||0)+1;}
-const codigos=Object.keys(mapaQuantidades);
-console.log('Códigos únicos:',codigos);
-console.log('Quantidades:',mapaQuantidades);
+(async()=>{
 const esperar=(condicao,timeout=10000,intervalo=100)=>new Promise(resolve=>{const inicio=Date.now();
 const timer=setInterval(()=>{
 try{if(condicao()){clearInterval(timer);resolve(true);return;}
@@ -81,6 +74,14 @@ if(!(await selecionarTabela22())){
 alert('Não foi possível confirmar a Tabela 22. Nenhum código foi inserido.');
 return;
 }
+const entrada=prompt('Cole os códigos:');
+if(!entrada){alert('Nenhum código informado.');return;}
+const listaCodigos=entrada.split(/[\s,;\n]+/).map(c=>c.trim()).filter(Boolean);
+const mapaQuantidades={};
+for(const codigo of listaCodigos){mapaQuantidades[codigo]=(mapaQuantidades[codigo]||0)+1;}
+const codigos=Object.keys(mapaQuantidades);
+console.log('Códigos únicos:',codigos);
+console.log('Quantidades:',mapaQuantidades);
 let pendentes=obterCodigosPendentes();
 console.log('Itens pendentes antes da inclusão:',pendentes);
 for(const codigo of Object.keys(pendentes)){
