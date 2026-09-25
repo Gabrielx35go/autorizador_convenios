@@ -24,11 +24,15 @@ for(let tentativa=1;tentativa<=3;tentativa++){
 if(!tabelaSelecionada()){
 const labelTabela=[...document.querySelectorAll('label')].find(l=>l.textContent.includes('Tabela'));
 if(!labelTabela)return false;
-const setas=labelTabela.parentElement?.querySelectorAll('.css-1xc3v61-indicatorContainer');
-const seta=setas?.[setas.length-1];
-if(!seta)return false;
-['mousedown','mouseup','click'].forEach(evt=>seta.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
-const opcao22=await esperarElemento(()=>[...document.querySelectorAll('[role="option"],div')].find(el=>el.textContent?.trim()===TEXTO_TABELA),8000);
+const seletorTabela=labelTabela.parentElement?.querySelector('.css-b62m3t-container');
+const campoTabela=labelTabela.parentElement?.querySelector('input[role="combobox"]');
+if(!seletorTabela&&!campoTabela)return false;
+const alvoTabela=seletorTabela||campoTabela;
+alvoTabela.click();
+['mousedown','mouseup','click'].forEach(evt=>alvoTabela.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
+const listaAberta=await esperarElemento(()=>document.querySelector('[role="listbox"]'),3000,100);
+if(!listaAberta){console.warn(`Lista da Tabela não abriu na tentativa ${tentativa}`);continue;}
+const opcao22=await esperarElemento(()=>[...listaAberta.querySelectorAll('[role="option"]')].find(el=>el.textContent?.trim()===TEXTO_TABELA),8000);
 if(!opcao22)return false;
 opcao22.click();
 }
