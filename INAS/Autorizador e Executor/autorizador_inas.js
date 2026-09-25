@@ -70,11 +70,6 @@ const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')
 setter.call(campoQuantidade,String(valor));
 ['input','change','blur'].forEach(evt=>campoQuantidade.dispatchEvent(new Event(evt,{bubbles:true})));
 return true;}
-console.log('Selecionando a Tabela 22 antes de inserir os códigos...');
-if(!(await selecionarTabela22())){
-alert('Não foi possível confirmar a Tabela 22. Nenhum código foi inserido.');
-return;
-}
 const entrada=prompt('Cole os códigos:');
 if(!entrada){alert('Nenhum código informado.');return;}
 const listaCodigos=entrada.split(/[\s,;\n]+/).map(c=>c.trim()).filter(Boolean);
@@ -83,6 +78,11 @@ for(const codigo of listaCodigos){mapaQuantidades[codigo]=(mapaQuantidades[codig
 const codigos=Object.keys(mapaQuantidades);
 console.log('Códigos únicos:',codigos);
 console.log('Quantidades:',mapaQuantidades);
+console.log('Selecionando a Tabela 22 antes de inserir os códigos...');
+if(!(await selecionarTabela22())){
+alert('Não foi possível confirmar a Tabela 22. Nenhum código foi inserido.');
+return;
+}
 let pendentes=obterCodigosPendentes();
 console.log('Itens pendentes antes da inclusão:',pendentes);
 for(const codigo of Object.keys(pendentes)){
