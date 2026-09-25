@@ -55,6 +55,20 @@ return pendentes;
 },{});}
 async function localizarCampoProcedimento(){
 return [...document.querySelectorAll('label')].find(l=>l.textContent.includes('Código e descrição'))?.parentElement?.querySelector('input[role="combobox"]');}
+async function preencherCodigo(codigo){
+const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+const campoFoco=await localizarCampoProcedimento();
+if(!campoFoco)return false;
+campoFoco.focus();
+const campoLimpeza=await localizarCampoProcedimento();
+if(!campoLimpeza)return false;
+setter.call(campoLimpeza,'');
+campoLimpeza.dispatchEvent(new Event('input',{bubbles:true}));
+const campoCodigo=await localizarCampoProcedimento();
+if(!campoCodigo)return false;
+setter.call(campoCodigo,codigo);
+campoCodigo.dispatchEvent(new InputEvent('input',{bubbles:true,data:codigo,inputType:'insertText'}));
+return true;}
 async function definirQuantidade(valor){
 const campoQuantidade=[...document.querySelectorAll('label')].find(l=>l.textContent.includes('Quantidade'))?.parentElement?.querySelector('input[type="number"]');
 if(!campoQuantidade)return false;
@@ -62,19 +76,18 @@ const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')
 setter.call(campoQuantidade,String(valor));
 ['input','change','blur'].forEach(evt=>campoQuantidade.dispatchEvent(new Event(evt,{bubbles:true})));
 return true;}
+console.log('Selecionando a Tabela 22 antes de inserir os códigos...');
+if(!(await selecionarTabela22())){
+alert('Não foi possível confirmar a Tabela 22. Nenhum código foi inserido.');
+return;
+}
 let pendentes=obterCodigosPendentes();
 console.log('Itens pendentes antes da inclusão:',pendentes);
 for(const codigo of Object.keys(pendentes)){
 try{console.log(`Processando: ${codigo} (Quantidade: ${mapaQuantidades[codigo]})`);
 if(!(await selecionarTabela22()))continue;
 await new Promise(r=>setTimeout(r,300));
-const campo=await localizarCampoProcedimento();if(!campo)continue;
-campo.focus();
-const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
-setter.call(campo,'');
-campo.dispatchEvent(new Event('input',{bubbles:true}));
-setter.call(campo,codigo);
-campo.dispatchEvent(new InputEvent('input',{bubbles:true,data:codigo,inputType:'insertText'}));
+if(!(await preencherCodigo(codigo)))continue;
 const opcao=await esperarElemento(()=>{const listbox=document.querySelector('[role="listbox"]');
 if(!listbox)return null;
 return [...listbox.querySelectorAll('[role="option"]')].find(el=>el.textContent?.trim().startsWith(codigo));},8000);
@@ -99,13 +112,7 @@ console.log(`Refazendo inclusão: ${codigo} (Quantidade: ${pendentes[codigo]})`)
 try{
 if(!(await selecionarTabela22()))continue;
 await new Promise(r=>setTimeout(r,300));
-const campo=await localizarCampoProcedimento();if(!campo)continue;
-campo.focus();
-const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
-setter.call(campo,'');
-campo.dispatchEvent(new Event('input',{bubbles:true}));
-setter.call(campo,codigo);
-campo.dispatchEvent(new InputEvent('input',{bubbles:true,data:codigo,inputType:'insertText'}));
+if(!(await preencherCodigo(codigo)))continue;
 const opcao=await esperarElemento(()=>{const listbox=document.querySelector('[role="listbox"]');
 if(!listbox)return null;
 return [...listbox.querySelectorAll('[role="option"]')].find(el=>el.textContent?.trim().startsWith(codigo));},8000);
