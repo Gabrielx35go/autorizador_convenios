@@ -26,7 +26,6 @@ const labelTabela=[...document.querySelectorAll('label')].find(l=>l.textContent.
 if(!labelTabela)return false;
 const setaTabela=labelTabela.parentElement?.querySelector('.css-1xc3v61-indicatorContainer');
 if(!setaTabela)return false;
-setaTabela.click();
 ['mousedown','mouseup','click'].forEach(evt=>setaTabela.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
 const listaAberta=await esperarElemento(()=>document.querySelector('[role="listbox"]'),3000,100);
 if(!listaAberta){console.warn(`Lista da Tabela não abriu na tentativa ${tentativa}`);continue;}
