@@ -24,12 +24,10 @@ for(let tentativa=1;tentativa<=3;tentativa++){
 if(!tabelaSelecionada()){
 const labelTabela=[...document.querySelectorAll('label')].find(l=>l.textContent.includes('Tabela'));
 if(!labelTabela)return false;
-const seletorTabela=labelTabela.parentElement?.querySelector('.css-b62m3t-container');
-const campoTabela=labelTabela.parentElement?.querySelector('input[role="combobox"]');
-if(!seletorTabela&&!campoTabela)return false;
-const alvoTabela=seletorTabela||campoTabela;
-alvoTabela.click();
-['mousedown','mouseup','click'].forEach(evt=>alvoTabela.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
+const setaTabela=labelTabela.parentElement?.querySelector('.css-1xc3v61-indicatorContainer');
+if(!setaTabela)return false;
+setaTabela.click();
+['mousedown','mouseup','click'].forEach(evt=>setaTabela.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
 const listaAberta=await esperarElemento(()=>document.querySelector('[role="listbox"]'),3000,100);
 if(!listaAberta){console.warn(`Lista da Tabela não abriu na tentativa ${tentativa}`);continue;}
 const opcao22=await esperarElemento(()=>[...listaAberta.querySelectorAll('[role="option"]')].find(el=>el.textContent?.trim()===TEXTO_TABELA),8000);
@@ -38,7 +36,6 @@ opcao22.click();
 }
 const confirmou=await esperar(()=>tabelaSelecionada(),3000,100);
 if(!confirmou){console.warn(`Tabela 22 não confirmada na tentativa ${tentativa}`);return false;}
-await new Promise(r=>setTimeout(r,150));
 }
 console.log('Tabela 22 confirmada 3 vezes');
 return true;}
@@ -90,7 +87,6 @@ console.log('Itens pendentes antes da inclusão:',pendentes);
 for(const codigo of Object.keys(pendentes)){
 try{console.log(`Processando: ${codigo} (Quantidade: ${mapaQuantidades[codigo]})`);
 if(!(await selecionarTabela22()))continue;
-await new Promise(r=>setTimeout(r,300));
 if(!(await preencherCodigo(codigo)))continue;
 const opcao=await esperarElemento(()=>{const listbox=document.querySelector('[role="listbox"]');
 if(!listbox)return null;
@@ -115,7 +111,6 @@ for(const codigo of Object.keys(pendentes)){
 console.log(`Refazendo inclusão: ${codigo} (Quantidade: ${pendentes[codigo]})`);
 try{
 if(!(await selecionarTabela22()))continue;
-await new Promise(r=>setTimeout(r,300));
 if(!(await preencherCodigo(codigo)))continue;
 const opcao=await esperarElemento(()=>{const listbox=document.querySelector('[role="listbox"]');
 if(!listbox)return null;
