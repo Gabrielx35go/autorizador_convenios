@@ -15,9 +15,10 @@ const TEXTO_TABELA='22 - Procedimentos e eventos em saúde';
 const tabelaSelecionada=()=>[...document.querySelectorAll('.css-1o0507n-singleValue')].some(el=>el.textContent?.trim()===TEXTO_TABELA);
 for(let tentativa=1;tentativa<=3;tentativa++){
 if(!tabelaSelecionada()){
+const setaTabela=await esperarElemento(()=>{
 const labelTabela=[...document.querySelectorAll('label')].find(l=>l.textContent.includes('Tabela'));
-if(!labelTabela)return false;
-const setaTabela=labelTabela.parentElement?.querySelector('.css-1xc3v61-indicatorContainer');
+return labelTabela?.parentElement?.querySelector('.css-1xc3v61-indicatorContainer');
+},10000,100);
 if(!setaTabela)return false;
 ['mousedown','mouseup','click'].forEach(evt=>setaTabela.dispatchEvent(new MouseEvent(evt,{bubbles:true,cancelable:true})));
 const listaAberta=await esperarElemento(()=>document.querySelector('[role="listbox"]'),3000,100);
